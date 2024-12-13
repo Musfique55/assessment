@@ -20,6 +20,7 @@ This project was built using the following technologies:
 - **Tailwind CSS**: A utility-first CSS framework for rapid UI development & For layout, styling, and responsiveness.
 - **React Hot Toast**: For warning & sucession.
 - **React Icons**: For website icons.
+- **react-rating-stars-component**: For product review.
 
 ## Features
 1. **Modern Design**: Clean and user-friendly design to enhance user experience.
