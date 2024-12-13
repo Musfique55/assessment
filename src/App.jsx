@@ -99,11 +99,11 @@ function App() {
     if(cartItems[existingId]){
       const updatedItem = [...cartItems];
       updatedItem[existingId].qty += qty;
-      setCartItems(updatedItem)
+      setCartItems(updatedItem);
     }else{
       setCartItems([...cartItems,products])
     }
-
+    toast('Succesfully added');
   }
 
 
