@@ -3,6 +3,7 @@ import ReactStars from "react-rating-stars-component";
 import './App.css'
 import { Heart, MinusIcon, PlusIcon } from 'lucide-react';
 import Modal from './utils/Modal';
+import toast, { Toaster } from 'react-hot-toast';
 
 const product = {
   "id": 101,
@@ -18,17 +19,17 @@ const product = {
   "model_number": "Forerunner 290XT",
   "colors": [
     {
-      "name": "Blue",
+      "name": "Purple",
       "code": "#816BFF",
       "image": "https://i.ibb.co.com/dmRTrVG/product-gallery.png"
     },
     {
-      "name": "Green",
+      "name": "Cyan",
       "code": "#1FCEC9",
       "image": "https://i.ibb.co.com/QX8wZbK/lg-a-3.png"
     },
     {
-      "name": "Black",
+      "name": "Blue",
       "code": "#4B97D3",
       "image": "https://i.ibb.co.com/889yJ0j/lg-a-3-1.png"
     },
@@ -64,16 +65,12 @@ function App() {
   const [currentColor,setCurrentColor] = useState(product.colors[0].code);
   const [currentSize,setCurrentSize] = useState(product.wrist_sizes[0].label);
   const [isOpen,setIsOpen] = useState(false);
-  
   const [cartItems,setCartItems] = useState([]);
   const [quantity, setQuantity] = useState(0);
-
   const currentImage = product.colors.find((item) => item.code === currentColor);
   const currentColorName = product.colors.find((item) => item.code === currentColor).name;
   const thisProductPrice = product.wrist_sizes.find((item) => item.label === currentSize
   ).price;
-
-
   const quantityTotal = cartItems.length > 0 ? cartItems.reduce((prev,curr) => prev + curr.qty,0) : 0;
 
   const priceTotal = cartItems.length > 0 ? cartItems.reduce((prev,curr) => prev + curr.price * curr.qty,0) : 0;
@@ -82,7 +79,7 @@ function App() {
   const handleAddToCart = (item,image,name,color,size,qty,price) => {
 
     if(quantity < 1){
-      console.log('please add an item first'); 
+      toast('please add an item first'); 
       return
     }
 
@@ -109,7 +106,6 @@ function App() {
 
   }
 
-  console.log(cartItems);
 
   const handleIncrement = () => {
     setQuantity(quantity + 1);
@@ -129,11 +125,12 @@ function App() {
     setIsOpen(false);
   }
 
+
   return (
     <>
-      <section className='flex gap-10'>
-          <div className=''>
-            <img src={currentImage.image} alt="" className='h-[720px] max-w-[600px]'/>
+      <section className='flex flex-col lg:flex-row gap-10'>
+          <div className='w-fit'>
+            <img src={currentImage.image} alt="" className='h-auto w-auto lg:h-[720px] lg:max-w-[600px]'/>
           </div>
 
           <div className='flex flex-col justify-start space-y-5'>
@@ -188,7 +185,7 @@ function App() {
             {/* wrist size */}
             <div>
               <p className='text-[#364A63] text-lg font-bold'>Wrist Size</p>
-              <div className='flex gap-5 mt-2'>
+              <div className='flex gap-2 md:gap-5 mt-2'>
                 {
                   product.wrist_sizes.map((item) => {
                     return <div key={item.price} onClick={() => setCurrentSize(item.label)} className={`flex gap-3 border px-[18px] py-2 cursor-pointer ${item.label === currentSize ? " border-[#6576FF]" : "border-[#DBDFEA]"}`}>
@@ -211,6 +208,7 @@ function App() {
                 <input
                   type="text"
                   value={quantity}
+                  readOnly
                   // onChange={handleInputChange}
                   className="w-16 h-10 border-0 text-center outline-none"
                 />
@@ -245,52 +243,12 @@ function App() {
       </div>
 
       {/* cart  */}
-      {/* <div className='max-w-[651px] text-center'>
-        <div className='grid grid-cols-8 gap-3  border-b pb-4 text-[#8091A7] text-sm'>
-          <div className='text-start'>Item</div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div>Color</div>
-          <div>Size</div>
-          <div>Qnt</div>
-          <div>Price</div>
-        </div>  
-
-        <div>
-           {
-            cartItems.map((item) => {
-              return <div className='grid grid-cols-8 gap-2 py-4 border-b ' key={item.id}>
-                <div className='col-span-4 gap-2 flex items-center'>
-                <img src={item.image} alt={item.name} className='h-9 w-9 '/>
-                <p className='text-nowrap text-sm'>{item.name}</p>
-                </div>
-                <p className='text-sm'>{item.color}</p>
-                <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>{item.size}</p>
-                <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>{item.qty}</p>
-                <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>${item.price}.00</p>
-              </div>
-            })
-           }   
-          <div className='grid grid-cols-8 items-center mt-5'>
-            <div className='col-span-6 text-start text-[#364A63] text-base font-bold'>Total</div>
-              <p className='col-span-1 text-center text-[#364A63] text-sm font-bold'>{quantityTotal}</p>
-              <p className='col-span-1 text-center text-lg text-[#364A63] font-bold'>${priceTotal}.00</p>
-            
-          </div>
-          <div className='flex flex-1 justify-end gap-3 mt-5'>
-            <button className='border border-[#DBDFEA] rounded-sm px-4 py-2'>Continue Shopping</button>
-            <button className='bg-[#6576FF] px-3 py-2 text-white text-sm font-bold rounded-md'>Checkout</button>
-          </div>
-        </div>
-      </div> */}
-
       {
         isOpen &&  <Modal 
         content={
-          <div className='max-w-[651px] text-center'>
+          <div className='md:max-w-[651px] md:w-auto w-[651px] pr-5 md:pr-0 text-center overflow-x-auto md:overflow-x-hidden'>
           {/* table heading */}
-          <div className='grid grid-cols-8 gap-3  border-b pb-4 text-[#8091A7] text-sm'>
+          <div className='grid grid-cols-8 gap-3 border-b pb-4 text-[#8091A7] text-sm '>
             <div className='text-start'>Item</div>
             <div></div>
             <div></div>
@@ -304,8 +262,8 @@ function App() {
                {/*cart  contents*/}
           <div>
              {
-              cartItems.map((item) => {
-                return <div className='grid grid-cols-8 gap-2 py-4 border-b items-center' key={item.id}>
+              cartItems.map((item,idx) => {
+                return <div className='grid grid-cols-8 gap-2 py-4 border-b items-center ' key={idx}>
                   <div className='col-span-4 gap-2 flex items-center'>
                   <img src={item.image} alt={item.name} className='h-9 w-9 '/>
                   <p className='text-nowrap text-sm text-[#364A63]'>{item.name}</p>
@@ -334,7 +292,22 @@ function App() {
         title={'Your Cart'}
         />
       }
-     
+      <Toaster 
+        toastOptions={{
+            className: '',
+            style: {
+            background : '#161616',
+            padding: '10px 16px 10px 16px',
+            color: '#C7C6D3',
+            },
+        }}
+        containerStyle={{
+            top: 20,
+            left: 50,
+            bottom: 20,
+            // right: 20,
+          }}
+        />
     </>
   )
 }
