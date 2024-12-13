@@ -2,6 +2,7 @@ import { useState } from 'react'
 import ReactStars from "react-rating-stars-component";
 import './App.css'
 import { Heart, MinusIcon, PlusIcon } from 'lucide-react';
+import Modal from './utils/Modal';
 
 const product = {
   "id": 101,
@@ -62,6 +63,7 @@ function App() {
 
   const [currentColor,setCurrentColor] = useState(product.colors[0].code);
   const [currentSize,setCurrentSize] = useState(product.wrist_sizes[0].label);
+  const [isOpen,setIsOpen] = useState(false);
   
   const [cartItems,setCartItems] = useState([]);
   const [quantity, setQuantity] = useState(0);
@@ -70,6 +72,11 @@ function App() {
   const currentColorName = product.colors.find((item) => item.code === currentColor).name;
   const thisProductPrice = product.wrist_sizes.find((item) => item.label === currentSize
   ).price;
+
+
+  const quantityTotal = cartItems.length > 0 ? cartItems.reduce((prev,curr) => prev + curr.qty,0) : 0;
+
+  const priceTotal = cartItems.length > 0 ? cartItems.reduce((prev,curr) => prev + curr.price * curr.qty,0) : 0;
   
 
   const handleAddToCart = (item,image,name,color,size,qty,price) => {
@@ -112,6 +119,14 @@ function App() {
     if(quantity > 0){
       setQuantity(quantity - 1)
     }
+  }
+
+  const onOpen = () => {
+    setIsOpen(true)
+  }
+
+  const onClose = () => {
+    setIsOpen(false);
   }
 
   return (
@@ -224,8 +239,102 @@ function App() {
           </div>
       </section>
       <div className='flex justify-center mt-20'>
-        <button className='bg-[#FFBB5A] text-[#364A63] focus:outline-none  flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-full'>Checkout  <span className='bg-white px-2 py-1 rounded-md'>{cartItems.length}</span></button>
+        <button
+        style={{ filter: 'drop-shadow(0 0 15px rgba(0, 0, 0, 0.25))' }}
+        onClick={onOpen} className='bg-[#FFBB5A] text-[#364A63] focus:outline-none  flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-full '>Checkout  <span className='bg-white px-2 py-1 rounded-md'>{cartItems.length}</span></button>
       </div>
+
+      {/* cart  */}
+      {/* <div className='max-w-[651px] text-center'>
+        <div className='grid grid-cols-8 gap-3  border-b pb-4 text-[#8091A7] text-sm'>
+          <div className='text-start'>Item</div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div>Color</div>
+          <div>Size</div>
+          <div>Qnt</div>
+          <div>Price</div>
+        </div>  
+
+        <div>
+           {
+            cartItems.map((item) => {
+              return <div className='grid grid-cols-8 gap-2 py-4 border-b ' key={item.id}>
+                <div className='col-span-4 gap-2 flex items-center'>
+                <img src={item.image} alt={item.name} className='h-9 w-9 '/>
+                <p className='text-nowrap text-sm'>{item.name}</p>
+                </div>
+                <p className='text-sm'>{item.color}</p>
+                <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>{item.size}</p>
+                <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>{item.qty}</p>
+                <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>${item.price}.00</p>
+              </div>
+            })
+           }   
+          <div className='grid grid-cols-8 items-center mt-5'>
+            <div className='col-span-6 text-start text-[#364A63] text-base font-bold'>Total</div>
+              <p className='col-span-1 text-center text-[#364A63] text-sm font-bold'>{quantityTotal}</p>
+              <p className='col-span-1 text-center text-lg text-[#364A63] font-bold'>${priceTotal}.00</p>
+            
+          </div>
+          <div className='flex flex-1 justify-end gap-3 mt-5'>
+            <button className='border border-[#DBDFEA] rounded-sm px-4 py-2'>Continue Shopping</button>
+            <button className='bg-[#6576FF] px-3 py-2 text-white text-sm font-bold rounded-md'>Checkout</button>
+          </div>
+        </div>
+      </div> */}
+
+      {
+        isOpen &&  <Modal 
+        content={
+          <div className='max-w-[651px] text-center'>
+          {/* table heading */}
+          <div className='grid grid-cols-8 gap-3  border-b pb-4 text-[#8091A7] text-sm'>
+            <div className='text-start'>Item</div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div>Color</div>
+            <div>Size</div>
+            <div>Qnt</div>
+            <div>Price</div>
+          </div>  
+  
+               {/*cart  contents*/}
+          <div>
+             {
+              cartItems.map((item) => {
+                return <div className='grid grid-cols-8 gap-2 py-4 border-b items-center' key={item.id}>
+                  <div className='col-span-4 gap-2 flex items-center'>
+                  <img src={item.image} alt={item.name} className='h-9 w-9 '/>
+                  <p className='text-nowrap text-sm text-[#364A63]'>{item.name}</p>
+                  </div>
+                  <p className='text-sm text-[#364A63]'>{item.color}</p>
+                  <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>{item.size}</p>
+                  <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>{item.qty}</p>
+                  <p className='text-sm text-[#364A63] font-bold leading-[23.1px]'>${item.price * item.qty}.00</p>
+                </div>
+              })
+             }   
+            {/*  total  */}
+            <div className='grid grid-cols-8 items-center mt-5'>
+              <div className='col-span-6 text-start text-[#364A63] text-base font-bold'>Total</div>
+                <p className='col-span-1 text-center text-[#364A63] text-sm font-bold'>{quantityTotal}</p>
+                <p className='col-span-1 text-center text-lg text-[#364A63] font-bold'>${priceTotal}.00</p>
+              
+            </div>
+            <div className='flex flex-1 justify-end gap-3 mt-5'>
+              <button className='border border-[#DBDFEA] rounded-sm px-4 py-2 focus:outline-none text-[#364A63] text-[13px] font-bold' onClick={onClose}>Continue Shopping</button>
+              <button className='bg-[#6576FF] px-3 py-2 text-white  rounded-md focus:outline-none  text-[13px] font-bold'>Checkout</button>
+            </div>
+          </div>
+        </div>
+        }
+        title={'Your Cart'}
+        />
+      }
+     
     </>
   )
 }
