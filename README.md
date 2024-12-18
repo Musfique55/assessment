@@ -59,7 +59,7 @@ The project is deployed using [Vercel](https://vercel.com/) for fast and reliabl
 - Frameworks and libraries used (e.g., React, Tailwind CSS) are mentioned above.
 
 ## Contact
-If you have any questions or need further information, feel free to contact me via email at **[mdmusfiquepatwaryl@gmail.com]**.
+If you have any questions or need further information, feel free to contact me via email at **[mdmusfiquepatwary@gmail.com]**.
 
 ---
 Thank you for reviewing my submission!
